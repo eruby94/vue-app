@@ -60,12 +60,8 @@
 </template>
 
 <script>
-import Modal from './Modal'
 export default {
   name: 'todo',
-  components: {
-    Modal
-  },
   beforeMount() {
     if (this.$localStorage.get('lists')) {
       this.lists = JSON.parse(this.$localStorage.get('lists'))
