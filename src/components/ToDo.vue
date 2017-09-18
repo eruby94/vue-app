@@ -1,5 +1,5 @@
 <template>
-  <div class="todo">
+  <div class="todo container">
     <h1 v-bind:title="message">{{ msg }}</h1>
     <div class="row">
         <form v-on:submit.prevent @submit="addTodo">
@@ -13,12 +13,14 @@
     </div>
     <div class="row">
         <div class="col-xs-4" v-for="list in lists">
-            <h3>{{list.title}}:</h3>
-            <ul v-for="item in list.items">
-                <li v-on:click="prepareItem(list.name, list.title, item)">
-                    {{item}}
-                </li>
-            </ul>
+            <div class="col-xs-12 list">
+                <h3>{{list.title}}:</h3>
+                <ul v-for="item in list.items">
+                    <li v-on:click="prepareItem(list.name, list.title, item)" class="col-xs-12">
+                        {{item}}
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
     <div v-if="showModal">
@@ -137,23 +139,30 @@ h1 {
 
 ul {
   list-style-type: none;
-  padding: 1;
+  padding: 0;
   text-align: left;
 }
 
 li {
-  transition: .3s;
+  transition: .2s;
   cursor: pointer;
-  width: 100%;
   display: inline-block;
-  margin: 0 10px;
-  padding: 5px 10px;;
+  margin: 5px 0;
+  padding: 5px 20px;
+  background-color: #ffffff;
   border: 1px solid #cfcfcf;
   border-radius: 5px;
 }
 
 li:hover {
-  transform: scale(1.05);
+  border-color: black;
+}
+
+.list {
+    border: 1px solid #42b983;
+    border-radius: 3px;
+    background-color: #ededed;
+    padding-bottom: 5px;
 }
 
 .modal-mask {
