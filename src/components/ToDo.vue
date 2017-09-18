@@ -1,60 +1,66 @@
 <template>
-  <div class="todo container">
-    <h1 v-bind:title="message">{{ msg }}</h1>
-    <div class="row">
-        <form v-on:submit.prevent @submit="addTodo">
-            <div class="form-group col-xs-5 col-xs-offset-3">
-                <input class="form-control" type="text" name="newItem" placeholder="New Item" v-model="newItem"/>
+  <div class='todo container'>
+    <div class='row'>
+        <form v-on:submit.prevent>
+            <div class='form-group col-xs-5 col-xs-offset-2'>
+                <input class='form-control' type='text' name='newItem' placeholder='New Item' v-model='newItem.text'/>
             </div>
-            <div class="col-xs-1">
-                <button class="btn btn-primary btn-md" type="submit">Add</button>
+            <div class='col-xs-3'>
+                <button class='btn btn-primary btn-md btn-left' v-on:click="addTodo">Add</button>
+                <button
+                class='btn btn-primary btn-md btn-right'
+                v-on:click="() => prepareItem('','',newItem.text)"
+                >
+                  Add To...
+                </button>
             </div>
         </form>
     </div>
-    <div class="row">
-        <div class="col-xs-4" v-for="list in lists">
-            <div class="col-xs-12 list">
+    <div class='row'>
+        <div class='col-xs-4' v-for='list in lists'>
+            <div class='col-xs-12 list'>
                 <h3>{{list.title}}:</h3>
-                <ul v-for="item in list.items">
-                    <li v-on:click="prepareItem(list.name, list.title, item)" class="col-xs-12">
+                <ul v-for='item in list.items'>
+                    <li v-on:click='prepareItem(list.name, list.title, item)' class='col-xs-12'>
                         {{item}}
                     </li>
                 </ul>
             </div>
         </div>
     </div>
-    <div v-if="showModal">
-        <transition name="modal">
-          <div class="modal-mask">
-            <div class="modal-wrapper">
-              <div class="modal-container col-xs-4 col-xs-offset-4">
-                <div class="modal-header">
-                    <h3>Move from {{preparedItem.title}}</h3>
+    <div v-if='showModal'>
+        <transition name='modal'>
+          <div class='modal-mask'>
+            <div class='modal-wrapper'>
+              <div class='modal-container col-xs-4 col-xs-offset-4'>
+                <div class='modal-header'>
+                    <h3 v-if="preparedItem.title">Move from {{preparedItem.title}}</h3>
+                    <h3 v-else>Add Item</h3>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="toName">To:</label>
-                        <select class="form-control" name="toName" v-model="toName">
-                            <option disabled default value="">
+                <div class='modal-body'>
+                    <div class='form-group'>
+                        <label for='toName'>To:</label>
+                        <select class='form-control' name='toName' v-model='toName'>
+                            <option disabled default value=''>
                                 Select a Destination
                             </option>
-                            <option v-for="list in lists" v-if="list.name !== preparedItem.name" :value="list.name">
+                            <option v-for='list in lists' v-if='list.name !== preparedItem.name' :value='list.name'>
                                 {{list.title}}
                             </option>
                         </select>
                     </div>
                     <p>
                       {{preparedItem.text}}
-                  </p>
+                    </p>
                 </div>
-                <div class="modal-footer">
-                  <button class="btn btn-md btn-danger modal-close-button" v-on:click="close">
+                <div class='modal-footer'>
+                  <button class='btn btn-md btn-danger btn-left' v-on:click='close'>
                     Cancel
                   </button>
-                  <button class="btn btn-md btn-primary" v-on:click="archiveItem">
+                  <button class='btn btn-md btn-primary' v-on:click='archiveItem'>
                     Archive
                   </button>
-                  <button class="btn btn-md btn-success" v-on:click="moveItem">Move</button>
+                  <button class='btn btn-md btn-success' v-on:click='() => moveItem()'>Move</button>
                 </div>
               </div>
             </div>
@@ -67,14 +73,14 @@
 <script>
 export default {
   name: 'todo',
-  beforeMount() {
-    if (this.$localStorage.get('lists')) {
-      this.lists = JSON.parse(this.$localStorage.get('lists'))
-    }
-    if (this.$localStorage.get('archive')) {
-      this.archive = JSON.parse(this.$localStorage.get('archive'))
-    }
-  },
+  // beforeMount() {
+  //   if (this.$localStorage.get('lists')) {
+  //     this.lists = JSON.parse(this.$localStorage.get('lists'))
+  //   }
+  //   if (this.$localStorage.get('archive')) {
+  //     this.archive = JSON.parse(this.$localStorage.get('archive'))
+  //   }
+  // },
   updated() {
     var that = this
     that.$nextTick(function() {
@@ -84,12 +90,19 @@ export default {
   },
   data() {
     return {
-      newItem: '',
       lists: {
         todoItems: {
           name: 'todoItems',
           title: 'Things To Do',
-          items: []
+          items: [
+            'Un-Archive Items (start with localStorage)',
+            'Enable Item Re-ordering',
+            'Enable Move to Position #',
+            'Create Full To-Do Object Model',
+            'List Customization',
+            'Add Vuex to Project',
+            'Multiple Boards'
+          ]
         },
         inProgress: {
           name: 'inProgress',
@@ -104,16 +117,23 @@ export default {
       },
       archive: [],
       preparedItem: {},
+      newItem: {
+        text: ''
+      },
       toName: '',
-      showModal: false
+      showModal: false,
+      isFrom: false
     }
   },
   methods: {
-    addTodo: function() {
-      this.lists.todoItems.items.push(this.newItem)
-      this.newItem = ''
+    addTodo() {
+      this.toName = 'todoItems'
+      this.preparedItem = this.newItem
+      this.moveItem()
+      this.newItem.text = ''
     },
-    prepareItem: function(name, title, text) {
+    prepareItem(name, title, text) {
+      this.toName = ''
       this.preparedItem = {
         name: name,
         text: text,
@@ -121,17 +141,19 @@ export default {
       }
       this.showModal = true
     },
-    moveItem() {
-      this.removeItem()
-      this.lists[this.toName].items.push(this.preparedItem.text)
-      this.close()
-      this.toName = ''
-    },
     removeItem() {
       let index = this.lists[this.preparedItem.name].items.indexOf(
         this.preparedItem.text
       )
       this.lists[this.preparedItem.name].items.splice(index, 1)
+    },
+    moveItem(toList, fromList) {
+      if (fromList) {
+        this.removeItem()
+      }
+      this.lists[this.toName].items.push(this.preparedItem.text)
+      this.newItem.text = ''
+      this.close()
     },
     close() {
       this.showModal = false
@@ -140,13 +162,12 @@ export default {
       this.removeItem()
       this.archive.push(this.preparedItem.text)
       this.close()
-      this.toName = ''
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style>
 h1 {
   font-weight: normal;
@@ -171,6 +192,10 @@ li {
 
 li:hover {
   border-color: black;
+}
+
+.todo {
+  margin-top: 1em;
 }
 
 .list {
@@ -214,11 +239,11 @@ li:hover {
   margin: 20px 0;
 }
 
-.modal-close-button {
+.btn-left {
   float: left;
 }
 
-.modal-default-button {
-    float: right;
+.btn-right {
+  float: right;
 }
 </style>
