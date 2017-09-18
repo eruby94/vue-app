@@ -48,8 +48,11 @@
                   </p>
                 </div>
                 <div class="modal-footer">
-                  <button class="btn btn-md btn-danger" v-on:click="close">
+                  <button class="btn btn-md btn-danger modal-close-button" v-on:click="close">
                     Cancel
+                  </button>
+                  <button class="btn btn-md btn-primary" v-on:click="archiveItem">
+                    Archive
                   </button>
                   <button class="btn btn-md btn-success" v-on:click="moveItem">Move</button>
                 </div>
@@ -68,11 +71,15 @@ export default {
     if (this.$localStorage.get('lists')) {
       this.lists = JSON.parse(this.$localStorage.get('lists'))
     }
+    if (this.$localStorage.get('archive')) {
+      this.archive = JSON.parse(this.$localStorage.get('archive'))
+    }
   },
   updated() {
     var that = this
     that.$nextTick(function() {
       that.$localStorage.set('lists', JSON.stringify(that.lists))
+      that.$localStorage.set('archive', JSON.stringify(that.archive))
     })
   },
   data() {
@@ -95,10 +102,9 @@ export default {
           items: []
         }
       },
+      archive: [],
       preparedItem: {},
       toName: '',
-      msg: 'Welcome to Your Vue.js Todo App',
-      message: 'You loaded this page on ' + new Date().toLocaleString(),
       showModal: false
     }
   },
@@ -116,23 +122,32 @@ export default {
       this.showModal = true
     },
     moveItem() {
-      let index = this.lists[this.preparedItem.name].items.indexOf(
-        this.preparedItem.text
-      )
-      this.lists[this.preparedItem.name].items.splice(index, 1)
+      this.removeItem()
       this.lists[this.toName].items.push(this.preparedItem.text)
       this.close()
       this.toName = ''
     },
+    removeItem() {
+      let index = this.lists[this.preparedItem.name].items.indexOf(
+        this.preparedItem.text
+      )
+      this.lists[this.preparedItem.name].items.splice(index, 1)
+    },
     close() {
       this.showModal = false
+    },
+    archiveItem() {
+      this.removeItem()
+      this.archive.push(this.preparedItem.text)
+      this.close()
+      this.toName = ''
     }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 h1 {
   font-weight: normal;
 }
@@ -164,50 +179,6 @@ li:hover {
     background-color: #ededed;
     padding-bottom: 5px;
 }
-
-.modal-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, .5);
-  display: table;
-  transition: opacity .3s ease;
-}
-
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.modal-container {
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-  transition: all .3s ease;
-  font-family: Helvetica, Arial, sans-serif;
-}
-
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
-}
-
-.modal-body {
-  margin: 20px 0;
-}
-
-.modal-close-button {
-  float: left;
-}
-
-.modal-default-button {
-    float: right;
-}
-
 .modal-mask {
   position: fixed;
   z-index: 9998;
