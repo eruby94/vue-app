@@ -5,13 +5,13 @@
               <img src="./assets/logo.png">
           </div>
           <div class="row">
+              <h1>Welcome to Your Vue.js Todo App</h1>
               <div class="col-xs-6 col-xs-offset-3">
                   <router-link to="/" tag="h4" class="col-xs-6 nav">Main Board</router-link>
                   <router-link to="/archive" tag="h4" class="col-xs-6 nav">Archive</router-link>
               </div>
           </div>
       </div>
-      <h1>Welcome to Your Vue.js Todo App</h1>
       <router-view></router-view>
   </div>
 </template>
