@@ -4,11 +4,9 @@
         <div class="col-xs-6 col-xs-offset-3" >
             <div class="col-xs-12 list">
                 <h3>Archived Items:</h3>
-                <ul v-for="item in archive">
-                    <li v-on:click="prepareItem(item)" class="col-xs-12">
-                        {{item}}
-                    </li>
-                </ul>
+                <div v-for="item in archive" v-on:click="prepareItem(item)" class="col-xs-12 item">
+                  {{item}}
+                </div>
             </div>
         </div>
     </div>
@@ -20,16 +18,28 @@
                 <div class="modal-header">
                     <h3>Delete Item?</h3>
                 </div>
-                <div class="modal-body">
-                  <p>
+                <div class='modal-body'>
+                    <div class='form-group'>
+                        <label for='toName'>To:</label>
+                        <select class='form-control' name='toName' v-model='toName'>
+                            <option disabled default value=''>
+                                Select a Destination
+                            </option>
+                            <option v-for='list in lists' :value='list.name'>
+                                {{list.title}}
+                            </option>
+                        </select>
+                    </div>
+                    <p>
                       {{preparedItem}}
-                  </p>
+                    </p>
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-md btn-primary modal-close-button" v-on:click="close">
                     Cancel
                   </button>
                   <button class="btn btn-md btn-danger" v-on:click="removeItem">Delete</button>
+                  <button class="btn btn-md btn-success" v-on:click="unarchive">Unarchive</button>
                 </div>
               </div>
             </div>
@@ -46,20 +56,18 @@ export default {
     if (this.$localStorage.get('archive')) {
       this.archive = JSON.parse(this.$localStorage.get('archive'))
     }
-  },
-  updated() {
-    var that = this
-    that.$nextTick(function() {
-      that.$localStorage.set('archive', JSON.stringify(that.archive))
-    })
+    if (this.$localStorage.get('lists')) {
+      this.lists = JSON.parse(this.$localStorage.get('lists'))
+    }
+    console.log(this.lists)
   },
   data() {
     return {
       archive: [],
       preparedItem: {},
-      msg: 'Welcome to Your Vue.js Todo App',
-      message: 'You loaded this page on ' + new Date().toLocaleString(),
-      showModal: false
+      lists: {},
+      showModal: false,
+      toName: ''
     }
   },
   methods: {
@@ -67,15 +75,19 @@ export default {
       this.preparedItem = item
       this.showModal = true
     },
-    moveItem() {
+    unarchive() {
       this.removeItem()
+      console.log(this.toName)
       this.lists[this.toName].items.push(this.preparedItem)
+      console.log(this.lists)
+      this.$localStorage.set('lists', JSON.stringify(this.lists))
       this.close()
       this.toName = ''
     },
     removeItem() {
       let index = this.archive.indexOf(this.preparedItem)
       this.archive.splice(index, 1)
+      this.$localStorage.set('archive', JSON.stringify(this.archive))
       this.close()
     },
     close() {
