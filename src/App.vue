@@ -2,7 +2,7 @@
   <div id="app">
       <div class="container">
           <div class="row">
-            <div class="col-xs-4 col-xs-offset-4">
+            <div class="col-xs-2 col-xs-offset-5">
               <img src="./assets/BedrockLogo.jpg" class="logo">
             </div>
           </div>
@@ -19,8 +19,22 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
-  name: 'app'
+  name: 'app',
+  beforeMount() {
+    let lists = JSON.parse(this.$localStorage.get('lists'))
+    if (lists) {
+      this.setListStore(lists)
+    }
+    let archive = JSON.parse(this.$localStorage.get('archive'))
+    if (archive) {
+      this.setArchiveStore(archive)
+    }
+  },
+  methods: {
+    ...mapMutations(['setListStore', 'setArchiveStore'])
+  }
 }
 </script>
 

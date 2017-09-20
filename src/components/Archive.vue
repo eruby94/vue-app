@@ -35,11 +35,11 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                  <button class="btn btn-md btn-primary modal-close-button" v-on:click="close">
+                  <button class="btn btn-md btn-primary modal-close-button" v-on:click="toggleModal">
                     Cancel
                   </button>
                   <button class="btn btn-md btn-danger" v-on:click="removeItem">Delete</button>
-                  <button class="btn btn-md btn-success" v-on:click="unarchive">Unarchive</button>
+                  <button class="btn btn-md btn-success" v-on:click="unarchive" :disabled="!toName">Unarchive</button>
                 </div>
               </div>
             </div>
@@ -50,49 +50,42 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'todo',
-  beforeMount() {
-    if (this.$localStorage.get('archive')) {
-      this.archive = JSON.parse(this.$localStorage.get('archive'))
-    }
-    if (this.$localStorage.get('lists')) {
-      this.lists = JSON.parse(this.$localStorage.get('lists'))
-    }
-    console.log(this.lists)
+  computed: {
+    ...mapState(['lists', 'showModal', 'archive'])
   },
   data() {
     return {
-      archive: [],
       preparedItem: {},
-      lists: {},
-      showModal: false,
       toName: ''
     }
   },
   methods: {
     prepareItem(item) {
+      this.toName = ''
       this.preparedItem = item
-      this.showModal = true
+      this.toggleModal()
     },
     unarchive() {
-      this.removeItem()
-      console.log(this.toName)
-      this.lists[this.toName].items.push(this.preparedItem)
-      console.log(this.lists)
-      this.$localStorage.set('lists', JSON.stringify(this.lists))
-      this.close()
-      this.toName = ''
+      this.removeItem(this.preparedItem)
+      let listUpdate = {
+        item: this.preparedItem,
+        destination: this.toName
+      }
+      this.addItem(listUpdate)
+      if (this.lists) {
+        this.$localStorage.set('lists', JSON.stringify(this.lists))
+      }
     },
     removeItem() {
-      let index = this.archive.indexOf(this.preparedItem)
-      this.archive.splice(index, 1)
-      this.$localStorage.set('archive', JSON.stringify(this.archive))
-      this.close()
+      this.deleteItem(this.preparedItem)
+      if (this.archive) {
+        this.$localStorage.set('archive', JSON.stringify(this.archive))
+      }
     },
-    close() {
-      this.showModal = false
-    }
+    ...mapMutations(['toggleModal', 'addItem', 'deleteItem'])
   }
 }
 </script>

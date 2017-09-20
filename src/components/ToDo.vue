@@ -26,13 +26,13 @@
                     </p>
                 </div>
                 <div class='modal-footer'>
-                  <button class='btn btn-md btn-danger btn-left' v-on:click='close'>
+                  <button class='btn btn-md btn-danger btn-left' v-on:click='toggleModal'>
                     Cancel
                   </button>
-                  <button class='btn btn-md btn-primary' v-on:click='archiveItem'>
+                  <button class='btn btn-md btn-primary' v-on:click='localArchiveItem'>
                     Archive
                   </button>
-                  <button class='btn btn-md btn-success' v-on:click='() => moveItem(toName,true)'>Move</button>
+                  <button class='btn btn-md btn-success' v-on:click='() => move(toName)' :disabled="!toName">Move</button>
                 </div>
               </div>
             </div>
@@ -44,10 +44,10 @@
             <div class='col-xs-12 list'>
                 <h3>{{list.title}}:</h3>
                 <draggable v-model="list.items" :options="{group:'todos', draggable: '.item'}" class="drag-area">
-                  <div v-for='item in list.items' v-on:click='prepareItem(list.name, list.title, item)' class='col-xs-12 item'>
+                  <div v-for='item in list.items' v-on:click='() => prepareItem(list.name, list.title, item)' class='col-xs-12 item'>
                     {{item}}
                   </div>
-                  <form class="col-xs-12 add-item" slot="footer" v-on:submit.prevent="() => addTo(list.name)">
+                  <form class="col-xs-12 add-item" slot="footer" v-on:submit.prevent="() => add(list.name)">
                     <input type="text" class="col-xs-12" v-model="list.newItem" placeholder="Add Item..."/>
                   </form>
                 </draggable>
@@ -59,15 +59,11 @@
 
 <script>
 import draggable from 'vuedraggable'
+import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
   name: 'todo',
-  beforeMount() {
-    if (this.$localStorage.get('lists')) {
-      this.lists = JSON.parse(this.$localStorage.get('lists'))
-    }
-    if (this.$localStorage.get('archive')) {
-      this.archive = JSON.parse(this.$localStorage.get('archive'))
-    }
+  computed: {
+    ...mapState(['lists', 'showModal', 'archive'])
   },
   components: {
     draggable
@@ -75,33 +71,18 @@ export default {
   updated() {
     var that = this
     that.$nextTick(function() {
-      that.$localStorage.set('lists', JSON.stringify(that.lists))
-      that.$localStorage.set('archive', JSON.stringify(that.archive))
+      if (that.archive) {
+        that.$localStorage.set('archive', JSON.stringify(that.archive))
+      }
+      if (that.lists) {
+        that.$localStorage.set('lists', JSON.stringify(that.lists))
+      }
     })
   },
   data() {
     return {
-      lists: {
-        todoItems: {
-          name: 'todoItems',
-          title: 'Things To Do',
-          items: []
-        },
-        inProgress: {
-          name: 'inProgress',
-          title: 'In-Progress',
-          items: []
-        },
-        completedItems: {
-          name: 'completedItems',
-          title: 'Completed',
-          items: []
-        }
-      },
-      archive: [],
       preparedItem: {},
       toName: '',
-      showModal: false,
       isFrom: false
     }
   },
@@ -113,33 +94,30 @@ export default {
         text: text,
         title: title
       }
-      this.showModal = true
+      this.toggleModal()
     },
-    removeItem() {
-      let index = this.lists[this.preparedItem.name].items.indexOf(
-        this.preparedItem.text
-      )
-      this.lists[this.preparedItem.name].items.splice(index, 1)
-    },
-    moveItem(toList, fromList) {
-      if (fromList) {
-        this.removeItem()
+    move(toName) {
+      let payload = {
+        preparedItem: this.preparedItem,
+        destination: toName
       }
-      this.lists[this.toName].items.push(this.preparedItem.text)
-      this.close()
+      this.moveItem(payload)
+      this.toName = ''
     },
-    addTo(toList) {
-      this.lists[toList].items.push(this.lists[toList].newItem)
+    add(toList) {
+      let listUpdate = {
+        destination: toList,
+        item: this.lists[toList].newItem
+      }
       this.lists[toList].newItem = ''
+      this.addItem(listUpdate)
     },
-    close() {
-      this.showModal = false
+    localArchiveItem() {
+      this.extractItem(this.preparedItem)
+      this.archiveItem(this.preparedItem.text)
     },
-    archiveItem() {
-      this.removeItem()
-      this.archive.push(this.preparedItem.text)
-      this.close()
-    }
+    ...mapMutations(['addItem', 'extractItem', 'toggleModal', 'archiveItem']),
+    ...mapActions(['moveItem'])
   }
 }
 </script>
