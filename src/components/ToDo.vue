@@ -40,7 +40,8 @@
         </transition>
     </div>
     <div class='row'>
-        <div class='col-xs-4' v-for='(list, index) in lists'>
+      <draggable v-model="lists" :options="{group: 'lists', draggable: '.list-container'}">
+        <div class='col-xs-4 list-container' v-for='(list, index) in lists'>
             <div class='col-xs-12 list'>
                 <h3>{{list.title}}:</h3>
                 <draggable v-model="list.items" :options="{group:'todos', draggable: '.item'}" class="drag-area">
@@ -53,6 +54,7 @@
                 </draggable>
             </div>
         </div>
+      </draggable>
     </div>
   </div>
 </template>
@@ -63,7 +65,16 @@ import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
   name: 'todo',
   computed: {
-    ...mapState(['lists', 'showModal', 'archive'])
+    lists: {
+      get() {
+        console.log(this.$store.state.lists)
+        return this.$store.state.lists
+      },
+      set(updatedLists) {
+        this.$store.commit('setListStore', updatedLists)
+      }
+    },
+    ...mapState(['showModal', 'archive'])
   },
   components: {
     draggable
