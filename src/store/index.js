@@ -10,15 +10,21 @@ const store = new Vuex.Store({
     lists: [
       {
         title: 'Things To Do',
-        items: []
+        items: [],
+        isInEdit: false,
+        newTitle: 'Things To Do'
       },
       {
         title: 'In-Progress',
-        items: []
+        items: [],
+        isInEdit: false,
+        newTitle: 'In-Progress'
       },
       {
         title: 'Completed',
-        items: []
+        items: [],
+        isInEdit: false,
+        newTitle: 'Completed'
       }
     ],
     archive: [],

@@ -8,6 +8,13 @@ const mutations = {
     )
     state.lists[preparedItem.oldIndex].items.splice(itemIndex, 1)
   },
+  updateListTitle(state, listUpdate) {
+    state.lists[listUpdate.index].title = listUpdate.newTitle
+    state.lists[listUpdate.index].isInEdit = false
+  },
+  toggleListEdit(state, listIndex) {
+    state.lists[listIndex].isInEdit = !state.lists[listIndex].isInEdit
+  },
   setListStore(state, lists) {
     state.lists = lists
   },

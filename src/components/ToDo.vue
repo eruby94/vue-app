@@ -11,8 +11,8 @@
                 </div>
                 <div class='modal-body'>
                     <div class='form-group'>
-                        <label for='toName'>To:</label>
-                        <select class='form-control' name='toName' v-model='newIndex'>
+                        <label for='newIndex'>To:</label>
+                        <select class='form-control' name='newIndex' v-model='newIndex'>
                             <option disabled default value=''>
                                 Select a Destination
                             </option>
@@ -43,7 +43,10 @@
       <draggable v-model="lists" :options="{group: 'lists', draggable: '.list-container'}">
         <div class='col-xs-4 list-container' v-for='(list, index) in lists'>
             <div class='col-xs-12 list'>
-                <h3>{{list.title}}:</h3>
+                <h3 v-if="!isInEdit(index)" v-on:click.prevent="() => toggleListEdit(index)">{{list.title}}:</h3>
+                <form v-if="isInEdit(index)" v-on:submit.prevent="() => updateTitle(index)">
+                  <input class="col-xs-12" type="text" name="newTitle" v-model="list.newTitle" />
+                </form>
                 <draggable v-model="list.items" :options="{group:'todos', draggable: '.item'}" class="drag-area">
                   <div v-for='item in list.items' v-on:click='() => prepareItem(index, list.title, item)' class='col-xs-12 item'>
                     {{item}}
@@ -67,7 +70,6 @@ export default {
   computed: {
     lists: {
       get() {
-        console.log(this.$store.state.lists)
         return this.$store.state.lists
       },
       set(updatedLists) {
@@ -94,6 +96,7 @@ export default {
     return {
       preparedItem: {},
       newIndex: null,
+      newTitle: '',
       isFrom: false
     }
   },
@@ -106,6 +109,9 @@ export default {
         title: title
       }
       this.toggleModal()
+    },
+    isInEdit(listIndex) {
+      return this.lists[listIndex].isInEdit
     },
     move() {
       let payload = {
@@ -123,11 +129,26 @@ export default {
       this.lists[listIndex].newItem = ''
       this.addItem(listUpdate)
     },
+    updateTitle(listIndex, oldTitle) {
+      let listUpdate = {
+        index: listIndex,
+        newTitle: this.lists[listIndex].newTitle
+      }
+      this.updateListTitle(listUpdate)
+      this.newTitle = ''
+    },
     localArchiveItem() {
       this.extractItem(this.preparedItem)
       this.archiveItem(this.preparedItem.text)
     },
-    ...mapMutations(['addItem', 'extractItem', 'toggleModal', 'archiveItem']),
+    ...mapMutations([
+      'addItem',
+      'extractItem',
+      'toggleModal',
+      'archiveItem',
+      'updateListTitle',
+      'toggleListEdit'
+    ]),
     ...mapActions(['moveItem'])
   }
 }
