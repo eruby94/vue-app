@@ -12,11 +12,11 @@
                 <div class='modal-body'>
                     <div class='form-group'>
                         <label for='toName'>To:</label>
-                        <select class='form-control' name='toName' v-model='toName'>
+                        <select class='form-control' name='toName' v-model='newIndex'>
                             <option disabled default value=''>
                                 Select a Destination
                             </option>
-                            <option v-for='list in lists' v-if='list.name !== preparedItem.name' :value='list.name'>
+                            <option v-for='(list, index) in lists' v-if='index !== preparedItem.oldIndex' :value='index'>
                                 {{list.title}}
                             </option>
                         </select>
@@ -32,7 +32,7 @@
                   <button class='btn btn-md btn-primary' v-on:click='localArchiveItem'>
                     Archive
                   </button>
-                  <button class='btn btn-md btn-success' v-on:click='() => move(toName)' :disabled="!toName">Move</button>
+                  <button class='btn btn-md btn-success' v-on:click='move' :disabled="!newIndex">Move</button>
                 </div>
               </div>
             </div>
@@ -40,14 +40,14 @@
         </transition>
     </div>
     <div class='row'>
-        <div class='col-xs-4' v-for='list in lists'>
+        <div class='col-xs-4' v-for='(list, index) in lists'>
             <div class='col-xs-12 list'>
                 <h3>{{list.title}}:</h3>
                 <draggable v-model="list.items" :options="{group:'todos', draggable: '.item'}" class="drag-area">
-                  <div v-for='item in list.items' v-on:click='() => prepareItem(list.name, list.title, item)' class='col-xs-12 item'>
+                  <div v-for='item in list.items' v-on:click='() => prepareItem(index, list.title, item)' class='col-xs-12 item'>
                     {{item}}
                   </div>
-                  <form class="col-xs-12 add-item" slot="footer" v-on:submit.prevent="() => add(list.name)">
+                  <form class="col-xs-12 add-item" slot="footer" v-on:submit.prevent="() => add(index)">
                     <input type="text" class="col-xs-12" v-model="list.newItem" placeholder="Add Item..."/>
                   </form>
                 </draggable>
@@ -82,34 +82,34 @@ export default {
   data() {
     return {
       preparedItem: {},
-      toName: '',
+      newIndex: null,
       isFrom: false
     }
   },
   methods: {
-    prepareItem(name, title, text) {
-      this.toName = ''
+    prepareItem(index, title, text) {
+      this.newIndex = ''
       this.preparedItem = {
-        name: name,
+        oldIndex: index,
         text: text,
         title: title
       }
       this.toggleModal()
     },
-    move(toName) {
+    move() {
       let payload = {
         preparedItem: this.preparedItem,
-        destination: toName
+        newIndex: this.newIndex
       }
       this.moveItem(payload)
-      this.toName = ''
+      this.newIndex = null
     },
-    add(toList) {
+    add(listIndex) {
       let listUpdate = {
-        destination: toList,
-        item: this.lists[toList].newItem
+        newIndex: listIndex,
+        item: this.lists[listIndex].newItem
       }
-      this.lists[toList].newItem = ''
+      this.lists[listIndex].newItem = ''
       this.addItem(listUpdate)
     },
     localArchiveItem() {

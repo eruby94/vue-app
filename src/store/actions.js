@@ -1,10 +1,8 @@
 const actions = {
   moveItem({ commit }, payload) {
-    if (payload.preparedItem.name) {
-      commit('extractItem', payload.preparedItem)
-    }
+    commit('extractItem', payload.preparedItem)
     let listUpdate = {
-      destination: payload.destination,
+      newIndex: payload.newIndex,
       item: payload.preparedItem.text
     }
     commit('addItem', listUpdate)

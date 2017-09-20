@@ -7,23 +7,20 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    lists: {
-      todoItems: {
-        name: 'todoItems',
+    lists: [
+      {
         title: 'Things To Do',
         items: []
       },
-      inProgress: {
-        name: 'inProgress',
+      {
         title: 'In-Progress',
         items: []
       },
-      completedItems: {
-        name: 'completedItems',
+      {
         title: 'Completed',
         items: []
       }
-    },
+    ],
     archive: [],
     showModal: false
   },
