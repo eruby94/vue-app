@@ -40,7 +40,7 @@
         <div class="col-xs-6 col-xs-offset-3" >
             <div class="col-xs-12 list">
                 <h3>Archived Items:</h3>
-                <draggable v-model="archive" :options="{group: 'archive', draggable: '.item'}" class="drag-area">
+                <draggable v-model="archive" :options="{group: 'archive', draggable: '.item'}">
                   <div v-for="item in archive" v-on:click="prepareItem(item)" class="col-xs-12 item">
                     {{item}}
                   </div>
