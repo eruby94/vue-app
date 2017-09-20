@@ -2,11 +2,6 @@
   <div id="app">
       <div class="container">
           <div class="row">
-            <div class="col-xs-2 col-xs-offset-5">
-              <img src="./assets/BedrockLogo.jpg" class="logo">
-            </div>
-          </div>
-          <div class="row">
               <h1>Reduce the Noise. <span class="highlighted">Stay Productive.</span></h1>
               <div class="col-xs-6 col-xs-offset-3">
                   <router-link to="/" tag="h4" class="col-xs-6 nav">Main Board</router-link>

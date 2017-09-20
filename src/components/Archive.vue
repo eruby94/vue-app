@@ -1,15 +1,5 @@
 <template>
   <div class="archive container">
-    <div class="row">
-        <div class="col-xs-6 col-xs-offset-3" >
-            <div class="col-xs-12 list">
-                <h3>Archived Items:</h3>
-                <div v-for="item in archive" v-on:click="prepareItem(item)" class="col-xs-12 item">
-                  {{item}}
-                </div>
-            </div>
-        </div>
-    </div>
     <div v-if="showModal">
         <transition name="modal">
           <div class="modal-mask">
@@ -20,12 +10,12 @@
                 </div>
                 <div class='modal-body'>
                     <div class='form-group'>
-                        <label for='toName'>To:</label>
-                        <select class='form-control' name='toName' v-model='toName'>
+                        <label for='newIndex'>To:</label>
+                        <select class='form-control' name='newIndex' v-model='newIndex'>
                             <option disabled default value=''>
                                 Select a Destination
                             </option>
-                            <option v-for='list in lists' :value='list.name'>
+                            <option v-for='(list, index) in lists' :value='index'>
                                 {{list.title}}
                             </option>
                         </select>
@@ -39,32 +29,56 @@
                     Cancel
                   </button>
                   <button class="btn btn-md btn-danger" v-on:click="removeItem">Delete</button>
-                  <button class="btn btn-md btn-success" v-on:click="unarchive" :disabled="!toName">Unarchive</button>
+                  <button class="btn btn-md btn-success" v-on:click="unarchive" :disabled="!newIndex">Unarchive</button>
                 </div>
               </div>
             </div>
           </div>
         </transition>
     </div>
+    <div class="row">
+        <div class="col-xs-6 col-xs-offset-3" >
+            <div class="col-xs-12 list">
+                <h3>Archived Items:</h3>
+                <draggable v-model="archive" :options="{group: 'archive', draggable: '.item'}" class="drag-area">
+                  <div v-for="item in archive" v-on:click="prepareItem(item)" class="col-xs-12 item">
+                    {{item}}
+                  </div>
+                </draggable>
+            </div>
+        </div>
+    </div>
   </div>
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'todo',
+  components: {
+    draggable
+  },
   computed: {
-    ...mapState(['lists', 'showModal', 'archive'])
+    archive: {
+      get() {
+        return this.$store.state.archive
+      },
+      set(updatedArchive) {
+        this.$store.commit('setArchiveStore', updatedArchive)
+      }
+    },
+    ...mapState(['lists', 'showModal'])
   },
   data() {
     return {
       preparedItem: {},
-      toName: ''
+      newIndex: ''
     }
   },
   methods: {
     prepareItem(item) {
-      this.toName = ''
+      this.newIndex = ''
       this.preparedItem = item
       this.toggleModal()
     },
@@ -72,7 +86,7 @@ export default {
       this.removeItem(this.preparedItem)
       let listUpdate = {
         item: this.preparedItem,
-        destination: this.toName
+        newIndex: this.newIndex
       }
       this.addItem(listUpdate)
       if (this.lists) {
