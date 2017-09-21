@@ -43,9 +43,9 @@
       <draggable v-model="lists" :options="{group: 'lists', draggable: '.list-container'}">
         <div class='col-xs-4 list-container' v-for='(list, index) in lists'>
             <div class='col-xs-12 list'>
-                <h3 v-if="!isInEdit(index)" v-on:click.prevent="() => toggleListEdit(index)">{{list.title}}:</h3>
-                <form v-if="isInEdit(index)" v-on:submit.prevent="() => updateTitle(index)">
-                  <input class="col-xs-12" type="text" name="newTitle" v-model="list.newTitle" />
+                <h3 v-show="!isInEdit(index)" v-on:click.prevent="() => enableListEdit(index)">{{list.title}}:</h3>
+                <form v-show="isInEdit(index)" v-on:submit.prevent="() => updateTitle(index)">
+                  <input class="col-xs-12 title-edit" type="text" name="newTitle" v-model="list.newTitle" />
                 </form>
                 <draggable v-model="list.items" :options="{group:'todos', draggable: '.item'}" class="drag-area">
                   <div v-for='item in list.items' v-on:click='() => prepareItem(index, list.title, item)' class='col-xs-12 item'>
@@ -147,9 +147,22 @@ export default {
       'toggleModal',
       'archiveItem',
       'updateListTitle',
-      'toggleListEdit'
+      'enableListEdit'
     ]),
     ...mapActions(['moveItem'])
   }
 }
 </script>
+
+<style>
+.title-edit {
+  margin-top: .5em;
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.75em;
+  background-color: #d6d6d6;
+  border-color: transparent;
+  border-radius: 3px;
+  outline: none;
+}
+</style>

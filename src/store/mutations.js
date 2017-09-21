@@ -12,8 +12,8 @@ const mutations = {
     state.lists[listUpdate.index].title = listUpdate.newTitle
     state.lists[listUpdate.index].isInEdit = false
   },
-  toggleListEdit(state, listIndex) {
-    state.lists[listIndex].isInEdit = !state.lists[listIndex].isInEdit
+  enableListEdit(state, listIndex) {
+    state.lists[listIndex].isInEdit = true
   },
   setListStore(state, lists) {
     state.lists = lists
