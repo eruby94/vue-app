@@ -27,8 +27,7 @@ const store = new Vuex.Store({
         newTitle: 'Completed'
       }
     ],
-    archive: [],
-    showModal: false
+    archive: []
   },
   mutations: mutations,
   actions: actions

@@ -5,9 +5,11 @@ import App from './App'
 import router from './router'
 import store from './store'
 import VueLocalStorage from 'vue-localstorage'
+import VModal from 'vue-js-modal'
 
 Vue.config.productionTip = false
 Vue.use(VueLocalStorage)
+Vue.use(VModal)
 
 /* eslint-disable no-new */
 new Vue({

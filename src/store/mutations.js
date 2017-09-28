@@ -21,17 +21,12 @@ const mutations = {
   setArchiveStore(state, archive) {
     state.archive = archive
   },
-  toggleModal(state) {
-    state.showModal = !state.showModal
-  },
   archiveItem(state, item) {
     state.archive.push(item)
-    state.showModal = false
   },
   deleteItem(state, item) {
     let index = state.archive.indexOf(item)
     state.archive.splice(index, 1)
-    state.showModal = false
   }
 }
 

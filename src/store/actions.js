@@ -6,7 +6,6 @@ const actions = {
       item: payload.preparedItem.text
     }
     commit('addItem', listUpdate)
-    commit('toggleModal')
   }
 }
 
