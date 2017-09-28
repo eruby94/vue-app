@@ -1,6 +1,7 @@
 <template>
   <div id="app">
       <div class="container">
+        <login></login>
           <div class="row">
               <h1>Reduce the Noise. <span class="highlighted">Stay Productive.</span></h1>
               <div class="col-xs-6 col-xs-offset-3">
@@ -15,8 +16,12 @@
 
 <script>
 import { mapMutations } from 'vuex'
+import Login from './components/Login.vue'
 export default {
   name: 'app',
+  components: {
+    Login
+  },
   beforeMount() {
     let lists = JSON.parse(this.$localStorage.get('lists'))
     if (lists) {
@@ -143,5 +148,9 @@ h1 {
 
 .drag-area {
   min-height: 60px;
+}
+
+.pointer {
+  cursor: pointer;
 }
 </style>
