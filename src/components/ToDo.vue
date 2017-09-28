@@ -43,9 +43,9 @@
       <draggable v-model="lists" :options="{group: 'lists', draggable: '.list-container'}">
         <div class='col-xs-4 list-container' v-for='(list, index) in lists'>
             <div class='col-xs-12 list'>
-                <h3 v-show="!isInEdit(index)" v-on:click.prevent="() => enableListEdit(index)">{{list.title}}:</h3>
-                <form v-show="isInEdit(index)" v-on:submit.prevent="() => updateTitle(index)">
-                  <input class="col-xs-12 title-edit" type="text" name="newTitle" v-model="list.newTitle" />
+                <h3 v-if="!isInEdit(index)" v-on:click.prevent="() => enableListEdit(index)">{{list.title}}:</h3>
+                <form v-if="isInEdit(index)" v-on:submit.prevent="() => updateTitle(index)">
+                  <input class="col-xs-12 title-edit" type="text" name="newTitle" v-model="list.newTitle" v-on:blur="() => updateTitle(index)" v-focus/>
                 </form>
                 <draggable v-model="list.items" :options="{group:'todos', draggable: '.item'}" class="drag-area">
                   <div v-for='item in list.items' v-on:click='() => prepareItem(index, list.title, item)' class='col-xs-12 item'>
@@ -80,6 +80,14 @@ export default {
   },
   components: {
     draggable
+  },
+  directives: {
+    focus: {
+      inserted: function(el) {
+        // Focus the element
+        el.focus()
+      }
+    }
   },
   updated() {
     var that = this
@@ -157,9 +165,12 @@ export default {
 <style>
 .title-edit {
   margin-top: .5em;
+  margin-bottom: .16em;
   text-align: center;
   font-weight: 500;
-  font-size: 1.75em;
+  font-size: 24px;
+  padding-top: 2.5px;
+  padding-left: 8.5px;
   background-color: #d6d6d6;
   border-color: transparent;
   border-radius: 3px;
