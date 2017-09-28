@@ -20,7 +20,9 @@
       </div>
     </modal>
     <p v-if="user.name">
-      Hello, {{user.name}}! | <span @click="logout" class="pointer">Logout</span>
+      Hello, {{user.name}}!
+      <span class="highlighted font-large">|</span>
+      <span @click="logout" class="pointer">Logout</span>
     </p>
     <p v-else @click="$modal.show('login')" class="pointer">
       Login
@@ -66,5 +68,10 @@ export default {
 <style>
 .login {
   text-align: right;
+}
+
+.font-large {
+  font-size: 1.5em;
+  font-weight: 300;
 }
 </style>
