@@ -1,0 +1,47 @@
+# project: cj85z9wpe00p40124qil35fsd
+# version: 24
+
+type Board implements Node {
+  id: ID! @isUnique
+  main: [List!]! @relation(name: "ActiveLists")
+  name: String! @isUnique
+  archive: [List!]! @relation(name: "ArchivedLists")
+  owner: User! @relation(name: "UserOwnedBoards")
+}
+
+type File implements Node {
+  contentType: String!
+  createdAt: DateTime!
+  id: ID! @isUnique
+  name: String!
+  secret: String! @isUnique
+  size: Int!
+  updatedAt: DateTime!
+  url: String! @isUnique
+  task: Task @relation(name: "TaskAttachments")
+}
+
+type List implements Node {
+  board: Board @relation(name: "ActiveLists")
+  id: ID! @isUnique
+  tasks: [Task!]! @relation(name: "TaskList")
+  title: String! @defaultValue(value: "Untitled")
+  archive: Board @relation(name: "ArchivedLists")
+}
+
+type Task implements Node {
+  header: String!
+  id: ID! @isUnique
+  list: List! @relation(name: "TaskList")
+  taskDetails: String!
+  users: [User!]! @relation(name: "UserTasks")
+  attachments: [File!]! @relation(name: "TaskAttachments")
+}
+
+type User implements Node {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  tasks: [Task!]! @relation(name: "UserTasks")
+  updatedAt: DateTime!
+  ownedBoards: [Board!]! @relation(name: "UserOwnedBoards")
+}
