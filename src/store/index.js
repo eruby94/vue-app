@@ -27,7 +27,10 @@ const store = new Vuex.Store({
         newTitle: 'Completed'
       }
     ],
-    archive: []
+    archive: [],
+    user: {
+      name: ''
+    }
   },
   mutations: mutations,
   actions: actions

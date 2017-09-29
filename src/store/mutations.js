@@ -1,4 +1,7 @@
 const mutations = {
+  setUser(state, user) {
+    state.user = user
+  },
   addItem(state, listUpdate) {
     state.lists[listUpdate.newIndex].items.push(listUpdate.item)
   },
@@ -7,6 +10,13 @@ const mutations = {
       preparedItem.text
     )
     state.lists[preparedItem.oldIndex].items.splice(itemIndex, 1)
+  },
+  archiveItem(state, item) {
+    state.archive.push(item)
+  },
+  deleteItem(state, item) {
+    let index = state.archive.indexOf(item)
+    state.archive.splice(index, 1)
   },
   updateListTitle(state, listUpdate) {
     state.lists[listUpdate.index].title = listUpdate.newTitle
@@ -20,13 +30,6 @@ const mutations = {
   },
   setArchiveStore(state, archive) {
     state.archive = archive
-  },
-  archiveItem(state, item) {
-    state.archive.push(item)
-  },
-  deleteItem(state, item) {
-    let index = state.archive.indexOf(item)
-    state.archive.splice(index, 1)
   }
 }
 
