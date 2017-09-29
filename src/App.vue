@@ -55,15 +55,6 @@ export default {
   color: #E07454;
 }
 
-.nav {
-  cursor: pointer;
-  color: #352E21;
-}
-
-.nav:hover {
-  color: #526a82;
-}
-
 h1 {
   font-weight: normal;
 }

@@ -63,8 +63,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .login {
-  text-align: right;
+  text-align: left;
 }
 </style>
