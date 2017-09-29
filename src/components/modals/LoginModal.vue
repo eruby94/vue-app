@@ -16,7 +16,7 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-md btn-primary modal-close-button" v-on:click.prevent="hide">
+      <button class="btn btn-md btn-primary modal-close-button" v-on:click="hide">
         Cancel
       </button>
       <button class="btn btn-md btn-success" v-on:click="login" :disabled="!username">Login</button>
@@ -33,7 +33,15 @@ export default {
         return this.$store.state.user
       },
       set(updatedUser) {
-        this.$store.commit('setUser', updatedUser)
+        this.$store.commit('setUserStore', updatedUser)
+      }
+    },
+    loggedIn: {
+      get() {
+        return this.$store.state.loggedIn
+      },
+      set(isLoggedIn) {
+        this.$store.commit('updateLoggedIn', isLoggedIn)
       }
     }
   },

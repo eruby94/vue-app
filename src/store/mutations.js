@@ -1,6 +1,9 @@
 const mutations = {
-  setUser(state, user) {
+  setUserStore(state, user) {
     state.user = user
+  },
+  setLoggedIn(state, isLoggedIn) {
+    state.loggedIn = isLoggedIn
   },
   addItem(state, listUpdate) {
     state.lists[listUpdate.newIndex].items.push(listUpdate.item)

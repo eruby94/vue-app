@@ -57,10 +57,10 @@ export default {
     var that = this
     that.$nextTick(function() {
       if (that.archive) {
-        that.$localStorage.set('archive', JSON.stringify(that.archive))
+        localStorage.setItem('archive', JSON.stringify(that.archive))
       }
       if (that.lists) {
-        that.$localStorage.set('lists', JSON.stringify(that.lists))
+        localStorage.setItem('lists', JSON.stringify(that.lists))
       }
     })
   },

@@ -16,11 +16,11 @@ export default {
     NavHeader
   },
   beforeMount() {
-    let lists = JSON.parse(this.$localStorage.get('lists'))
+    let lists = JSON.parse(localStorage.getItem('lists'))
     if (lists) {
       this.setListStore(lists)
     }
-    let archive = JSON.parse(this.$localStorage.get('archive'))
+    let archive = JSON.parse(localStorage.getItem('archive'))
     if (archive) {
       this.setArchiveStore(archive)
     }
@@ -43,6 +43,7 @@ export default {
 
 .app-container {
   position: relative;
+  margin-top: 4em;
   z-index: 0;
 }
 
@@ -57,6 +58,10 @@ export default {
 
 h1 {
   font-weight: normal;
+}
+
+button {
+  outline: none !important;
 }
 
 .item, .add-item {

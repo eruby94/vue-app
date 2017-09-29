@@ -52,6 +52,7 @@ export default {
         newIndex: this.newIndex
       }
       this.moveItem(payload)
+      this.$modal.hide('item')
       this.newIndex = ''
     },
     localArchiveItem() {

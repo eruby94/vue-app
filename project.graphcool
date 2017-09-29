@@ -1,5 +1,5 @@
 # project: cj85z9wpe00p40124qil35fsd
-# version: 24
+# version: 31
 
 type Board implements Node {
   id: ID! @isUnique
@@ -43,5 +43,21 @@ type User implements Node {
   id: ID! @isUnique
   tasks: [Task!]! @relation(name: "UserTasks")
   updatedAt: DateTime!
+  email: String @isUnique
+  firstName: String!
+  lastName: String!
   ownedBoards: [Board!]! @relation(name: "UserOwnedBoards")
+  password: String
+  role: Role!
+}
+
+enum Role {
+  Developer
+  ProjectManager
+  GraphicDesigner
+  Photographer
+  Videographer
+  Copywriter
+  CreativeDirector
+  Leadership
 }

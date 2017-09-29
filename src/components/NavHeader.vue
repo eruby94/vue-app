@@ -1,41 +1,60 @@
 <template>
   <div>
     <div class="header-bar">
-      <div class="col-xs-8">
-        <login></login>
+      <div v-if="username">
+        <div class="col-xs-2">
+          <h4 class="nav-item">
+            Hello {{username}}! <span class="highlighted">|</span> <span @click="logout()" class="nav-link">Logout</span>
+          </h4>
+        </div>
+        <div class="col-xs-8">
+          <router-link to="/" tag="h4" class="nav-item nav-link">Main Board</router-link>
+        </div>
+        <div class="col-xs-2">
+          <router-link to="/archive" tag="h4" class="nav-item nav-link right">Archive</router-link>
+        </div>
       </div>
-      <div class="col-xs-3">
-        <router-link to="/" tag="h4" class="col-xs-6 nav-item">Main Board</router-link>
-      </div>
-      <div class="col-xs-1">
-        <router-link to="/archive" tag="h4" class="col-xs-6 nav-item right">Archive</router-link>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-8 col-xs-offset-2">
-        <h2>Reduce the Noise. <span class="highlighted">Stay Productive.</span></h2>
+      <div v-else>
+        <div class="col-xs-12">
+          <h4>Welcome!</h4>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Login from './Login.vue'
+import { GC_USER_ID, GC_AUTH_TOKEN } from '../constants/settings'
+import { mapMutations } from 'vuex'
 export default {
   name: 'nav-header',
-  components: {
-    Login
+  computed: {
+    username() {
+      return this.$store.state.user.firstName
+    }
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem(GC_USER_ID)
+      localStorage.removeItem(GC_AUTH_TOKEN)
+      this.setUserStore({})
+      this.$router.push({ path: '/login' })
+    },
+    ...mapMutations(['setUserStore'])
   }
 }
 </script>
 
 <style scoped>
 .nav-item {
-  cursor: pointer;
   color: #352E21;
 }
 
-.nav-item:hover {
+.nav-link {
+  cursor: pointer;
+}
+
+.nav-link:hover {
   color: #526a82;
 }
 
@@ -45,6 +64,7 @@ export default {
 
 .header-bar {
   position: fixed;
+  top: 0;
   z-index: 1000;
   width: 100%;
   padding-top: .3em;

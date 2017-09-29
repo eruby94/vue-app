@@ -51,14 +51,14 @@ export default {
       }
       this.addItem(listUpdate)
       if (this.lists) {
-        this.$localStorage.set('lists', JSON.stringify(this.lists))
+        localStorage.setItem('lists', JSON.stringify(this.lists))
       }
     },
     removeItem() {
       this.$modal.hide('delete')
       this.deleteItem(this.preparedItem)
       if (this.archive) {
-        this.$localStorage.set('archive', JSON.stringify(this.archive))
+        localStorage.setItem('archive', JSON.stringify(this.archive))
       }
     },
     ...mapMutations(['addItem', 'deleteItem'])

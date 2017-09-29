@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import ToDo from '@/components/ToDo'
 import Archive from '@/components/Archive'
+import Login from '@/components/Login'
 
 Vue.use(Router)
 
@@ -10,13 +11,15 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'ToDo',
       component: ToDo
     },
     {
       path: '/archive',
-      name: 'Archive',
       component: Archive
+    },
+    {
+      path: '/login',
+      component: Login
     }
   ]
 })

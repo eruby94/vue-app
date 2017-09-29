@@ -30,7 +30,8 @@ const store = new Vuex.Store({
     archive: [],
     user: {
       name: ''
-    }
+    },
+    loggedIn: false
   },
   mutations: mutations,
   actions: actions
