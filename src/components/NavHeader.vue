@@ -49,7 +49,7 @@ export default {
   width: 100%;
   padding-top: .3em;
   border-bottom: 1px solid black;
-  box-shadow: 0 3px 2px -2px gray;
+  box-shadow: 0 1px 3px gray;
   background-color: #ededed;
 }
 
