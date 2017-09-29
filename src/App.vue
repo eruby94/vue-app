@@ -1,26 +1,19 @@
 <template>
   <div id="app">
-      <div class="container">
-        <login></login>
-          <div class="row">
-              <h1>Reduce the Noise. <span class="highlighted">Stay Productive.</span></h1>
-              <div class="col-xs-6 col-xs-offset-3">
-                  <router-link to="/" tag="h4" class="col-xs-6 nav">Main Board</router-link>
-                  <router-link to="/archive" tag="h4" class="col-xs-6 nav">Archive</router-link>
-              </div>
-          </div>
+      <nav-header></nav-header>
+      <div class="app-container">
+        <router-view></router-view>
       </div>
-      <router-view></router-view>
   </div>
 </template>
 
 <script>
 import { mapMutations } from 'vuex'
-import Login from './components/Login.vue'
+import NavHeader from './components/NavHeader.vue'
 export default {
   name: 'app',
   components: {
-    Login
+    NavHeader
   },
   beforeMount() {
     let lists = JSON.parse(this.$localStorage.get('lists'))
@@ -45,8 +38,12 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #352E21;
-  margin-top: 30px;
   margin-bottom: 15px;
+}
+
+.app-container {
+  position: relative;
+  z-index: 0;
 }
 
 .logo {
@@ -60,11 +57,11 @@ export default {
 
 .nav {
   cursor: pointer;
-  color: #526a82;
+  color: #352E21;
 }
 
 .nav:hover {
-  color: #352E21;
+  color: #526a82;
 }
 
 h1 {

@@ -19,14 +19,12 @@
         <button class="btn btn-md btn-success" v-on:click="login" :disabled="!username">Login</button>
       </div>
     </modal>
-    <p v-if="user.name">
+    <h4 v-if="user.name">
       Hello, {{user.name}}!
-      <span class="highlighted font-large">|</span>
+      <span class="highlighted">|</span>
       <span @click="logout" class="pointer">Logout</span>
-    </p>
-    <p v-else @click="$modal.show('login')" class="pointer">
-      Login
-    </p>
+    </h4>
+    <h4 v-else @click="$modal.show('login')" class="pointer">Login</h4>
   </div>
 </template>
 
@@ -68,10 +66,5 @@ export default {
 <style>
 .login {
   text-align: right;
-}
-
-.font-large {
-  font-size: 1.5em;
-  font-weight: 300;
 }
 </style>
